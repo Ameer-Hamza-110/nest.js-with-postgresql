@@ -19,7 +19,24 @@ export class EmployeeService {
 
     async findOneEmployee(id: number): Promise<Employee> {
         const employee = await this.employeeRepo.findOneBy({ id })
-        if (!employee) throw new NotFoundException(`Employee with: ${id} not found`);
+        if (!employee) throw new NotFoundException(`Employee with ID ${id} not found`);
         return employee;
+    }
+
+    async updateData(id: number, data: Partial<Employee>) {
+        const employee = await this.employeeRepo.findOneBy({ id })
+        if (!employee) throw new NotFoundException(`Employee with ID ${id} not found`);
+
+        const updated = Object.assign(employee, data);
+        return await this.employeeRepo.save(updated)
+    }
+
+
+    async deleteData(id: number): Promise<{ message: string }> {
+        const result = await this.employeeRepo.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`Employee with ID ${id} not found`)
+        }
+        return { message: `Employee with ID: ${id} hase been deleted` }
     }
 }
