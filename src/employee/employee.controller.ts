@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { EmployeeService } from './employee.service.js';
 import { Employee } from './employee.entity.js';
 
@@ -14,6 +14,14 @@ export class EmployeeController {
     @Get()
     getAll() {
         return this.employeeService.findAllEmployee()
+    }
+
+    @Get('search') // why this search on top of :id route: so that nest find this route before :id route
+    async searchEmployee(
+        @Query('name') name?: string,
+        @Query('department') department?: string,
+    ) {
+        return this.employeeService.searchEmployee({ name, department })
     }
 
     @Get(':id')

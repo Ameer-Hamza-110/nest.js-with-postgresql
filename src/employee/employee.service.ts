@@ -39,4 +39,23 @@ export class EmployeeService {
         }
         return { message: `Employee with ID: ${id} hase been deleted` }
     }
+
+
+    async searchEmployee(filters: { name?: string, department?: string }): Promise<Employee[]> {
+        const query = this.employeeRepo.createQueryBuilder('employee');
+
+        if (filters.name) {
+            query.andWhere('employee.name ILIKE :name', { //ILIKE Ignores pg case sensitive rules
+                name: `%${filters.name}%` // 
+            })
+        }
+
+        if (filters.department) {
+            query.andWhere('employee.department ILIKE :dept', {
+                dept: `%${filters.department}%`
+            })
+        }
+
+        return query.getMany();
+    }
 }
