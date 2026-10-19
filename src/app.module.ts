@@ -9,7 +9,9 @@ import { EmployeeModule } from './employee/employee.module.js';
 @Module({
   imports: [
     UserModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true
+    }),
     TypeOrmModule.forRoot({
       type: "postgres", 
       url: process.env.DATABASE_URL,
